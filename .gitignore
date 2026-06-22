@@ -1,0 +1,29 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+
+# Test results and coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Logs
+*.log
+
+# Debug symbols and local publish artifacts
+*.pdb
+
+# OS files
+Thumbs.db
+Desktop.ini

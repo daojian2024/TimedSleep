@@ -1,0 +1,277 @@
+<Window x:Class="TimedSleep.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:core="clr-namespace:TimedSleep.Core"
+        mc:Ignorable="d"
+        Title="TimedSleep"
+        Height="640"
+        Width="560"
+        MinHeight="640"
+        MinWidth="480"
+        ResizeMode="CanResize"
+        Background="#F5F7FA"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#18202B" />
+        </Style>
+
+        <Style x:Key="LabelText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#5B6675" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="0,0,0,7" />
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="#CBD3DD" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="#CBD3DD" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="#B8C2CF" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="#18202B" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F3F6FA" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#E8EEF7" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F1F3F6" />
+                                <Setter Property="Foreground" Value="#94A0AF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#2563EB" />
+            <Setter Property="BorderBrush" Value="#2563EB" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="PanelBorder" TargetType="Border">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#E0E6EF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="18" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="TimedSleep"
+                           FontSize="28"
+                           FontWeight="SemiBold"
+                           Foreground="#111827" />
+                <TextBlock Text="{Binding StatusText}"
+                           Margin="0,8,0,0"
+                           Foreground="#64748B"
+                           FontSize="14" />
+            </StackPanel>
+
+            <Border Grid.Column="1"
+                    Padding="12,7"
+                    Background="#EAF1FF"
+                    CornerRadius="8"
+                    VerticalAlignment="Top">
+                <TextBlock Text="{Binding RemainingText}"
+                           FontFamily="Consolas"
+                           FontWeight="SemiBold"
+                           Foreground="#1D4ED8" />
+            </Border>
+        </Grid>
+
+        <StackPanel Grid.Row="1">
+                <Border Style="{StaticResource PanelBorder}">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Style="{StaticResource LabelText}" Text="触发方式" />
+                                <ComboBox ItemsSource="{Binding TriggerModes}"
+                                          SelectedItem="{Binding SelectedTriggerMode}"
+                                          IsEnabled="{Binding CanEdit}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center" TextAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Text" Value="倒计时" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding}" Value="{x:Static core:TriggerMode.ClockTime}">
+                                                                <Setter Property="Text" Value="指定时间" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Style="{StaticResource LabelText}" Text="执行动作" />
+                                <ComboBox ItemsSource="{Binding PowerActions}"
+                                          SelectedItem="{Binding SelectedPowerAction}"
+                                          IsEnabled="{Binding CanEdit}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center" TextAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Text" Value="休眠" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding}" Value="{x:Static core:PowerAction.Shutdown}">
+                                                                <Setter Property="Text" Value="关机" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Margin="0,18,0,0"
+                                    Visibility="{Binding IsCountdownMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Style="{StaticResource LabelText}" Text="倒计时分钟数" />
+                            <TextBox Text="{Binding CountdownMinutes, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{Binding CanEdit}" />
+                            <UniformGrid Columns="4" Margin="-4,12,-4,0">
+                                <Button Content="15 分钟" Command="{Binding SetQuickMinutesCommand}" CommandParameter="15" />
+                                <Button Content="30 分钟" Command="{Binding SetQuickMinutesCommand}" CommandParameter="30" />
+                                <Button Content="60 分钟" Command="{Binding SetQuickMinutesCommand}" CommandParameter="60" />
+                                <Button Content="90 分钟" Command="{Binding SetQuickMinutesCommand}" CommandParameter="90" />
+                            </UniformGrid>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,18,0,0"
+                                    Visibility="{Binding IsClockTimeMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Style="{StaticResource LabelText}" Text="指定时间" />
+                            <TextBox Text="{Binding ClockTime, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{Binding CanEdit}" />
+                            <TextBlock Text="使用 24 小时制，例如 23:30。早于当前时间时会安排到明天。"
+                                       Foreground="#7A8594"
+                                       FontSize="12"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource PanelBorder}" Margin="0,14,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="剩余时间" Foreground="#64748B" FontSize="13" />
+                            <TextBlock Text="{Binding RemainingText}"
+                                       FontFamily="Consolas"
+                                       FontSize="42"
+                                       FontWeight="SemiBold"
+                                       Foreground="#111827"
+                                       Margin="0,4,0,0" />
+                        </StackPanel>
+                        <Border Grid.Column="1"
+                                Width="56"
+                                Height="56"
+                                Background="#EEF6F2"
+                                CornerRadius="8"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="⏱"
+                                       FontSize="28"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Border>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Content="开始"
+                    Command="{Binding StartCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+            <Button Grid.Column="2"
+                    Content="取消"
+                    Command="{Binding CancelCommand}" />
+        </Grid>
+    </Grid>
+</Window>
